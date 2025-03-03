@@ -41,3 +41,6 @@ A full-fledged MERN stack application built with:
 ```bash
 git clone https://github.com/YOUR_USERNAME/Recipe-Sharing-Platform.git
 cd Recipe-Sharing-Platform
+
+
+*Project still in production, with many more exciting features to come!
