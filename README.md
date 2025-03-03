@@ -1,6 +1,6 @@
 # Fooooodit
 
-Your one-stop cursed recipe-sharing platform.
+Your one-stop cursed recipe-sharing platform (of course based off JJK).
 
 ---
 
