@@ -39,5 +39,5 @@ A full-fledged MERN stack application built with:
 
 ### Clone the Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/fooooodit.git
-cd fooooodit
+git clone https://github.com/YOUR_USERNAME/Recipe-Sharing-Platform.git
+cd Recipe-Sharing-Platform
