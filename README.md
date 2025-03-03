@@ -1,6 +1,6 @@
 # Fooooodit
 
-Your one-stop cursed recipe-sharing platform where *Sukuna's finger curry* meets *Gojo's Six Eyes sushi rolls*.
+Your one-stop cursed recipe-sharing platform.
 
 ---
 
