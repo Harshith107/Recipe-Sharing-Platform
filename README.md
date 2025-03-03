@@ -14,6 +14,7 @@ A full-fledged MERN stack application built with:
 - Cloudinary Image Uploads
 - Cursed CRUD Rituals 🔥
 - Sonner Toast Notifications (because curses need to know when they're deleted 💀)
+- Live Search 🔍
 
 ---
 
