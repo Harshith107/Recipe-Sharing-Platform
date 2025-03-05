@@ -1,9 +1,14 @@
+html[class="dark"] {
+  color-scheme: dark;
+}
+
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
 @import "tailwindcss/preflight";
+
 @tailwind utilities;
 @tailwind utilities;
 

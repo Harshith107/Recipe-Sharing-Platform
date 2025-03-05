@@ -1,8 +1,17 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function SkeletonCard() {
-    return (
-      <div className="card-glass w-full h-64 animate-pulse bg-gradient-to-r from-black/20 via-black/40 to-black/20"></div>
-    );
-  }
+export default function CursedSkeleton({ count = 1 }: { count?: number }) {
+  return (
+    <>
+      {Array.from({ length: count }).map((_, index) => (
+        <div
+          key={index}
+          className="w-full h-40 bg-white/10 rounded-lg animate-pulse mb-4"
+        />
+      ))}
+    </>
+  );
+}
+
+
   

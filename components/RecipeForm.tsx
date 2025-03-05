@@ -1,75 +1,60 @@
 "use client";
-import { useState } from "react";
-import { useToast } from "@/components/ui/toasts";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
-export default function RecipeForm() {
-  const { showToast } = useToast();
-  const [form, setForm] = useState({ title: "", description: "", image: "" });
-  const [loading, setLoading] = useState(false);
-
-  const handleImageUpload = async (e: any) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    setLoading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "recipes"); // Cloudinary Folder Name
-
-    try {
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      const data = await res.json();
-      setForm({ ...form, image: data.secure_url });
-      showToast("Image Uploaded Successfully 🔥");
-    } catch (error) {
-      showToast("Image Upload Failed 💀");
-    } finally {
-      setLoading(false);
-    }
+interface RecipeFormProps {
+  recipe?: {
+    title: string;
+    description: string;
   };
+  onSubmit: (recipeData: { title: string; description: string }) => Promise<void>;
+}
 
-  const handleSubmit = async (e: React.FormEvent) => {
+export default function RecipeForm({ recipe, onSubmit }: RecipeFormProps) {
+  const [title, setTitle] = useState(recipe?.title ?? "");
+  const [description, setDescription] = useState(recipe?.description ?? "");
+
+  useEffect(() => {
+    if (recipe) {
+      setTitle(recipe.title);
+      setDescription(recipe.description);
+    }
+  }, [recipe]);
+
+  async function handleSubmit(e: any) {
     e.preventDefault();
-    try {
-      const res = await fetch("/api/recipes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (res.ok) {
-        showToast("Recipe cooked successfully 🔥");
-        setForm({ title: "", description: "", image: "" });
-      } else {
-        showToast("Failed to cook recipe ❌");
-      }
-    } catch (error) {
-      showToast("Internal Curse Error 💀");
+
+    if (!title.trim() || !description.trim()) {
+      toast.error("🔥 Chef! Missing Ingredients");
+      return;
     }
-  };
+
+    await onSubmit({ title, description });
+    setTitle("");
+    setDescription("");
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <input
+    <form onSubmit={handleSubmit} className="w-full max-w-lg bg-black p-6 rounded-lg">
+      <Input
+        type="text"
         placeholder="Recipe Title"
-        className="border p-2"
-        value={form.title}
-        onChange={(e) => setForm({ ...form, title: e.target.value })}
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className="mb-4 bg-black border border-purple-600 text-white"
       />
-      <textarea
+      <Textarea
         placeholder="Description"
-        className="border p-2"
-        value={form.description}
-        onChange={(e) => setForm({ ...form, description: e.target.value })}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        className="mb-4 bg-black border border-purple-600 text-white"
       />
-      <input type="file" onChange={handleImageUpload} className="border p-2" />
-      {loading ? <p>Uploading Image...</p> : null}
-      <button className="bg-black text-white p-2">Cook Recipe 🔥</button>
+      <Button type="submit" className="bg-purple-600 hover:bg-purple-800">
+        {recipe ? "Update Recipe 📝" : "Cook Recipe 🔥"}
+      </Button>
     </form>
   );
 }

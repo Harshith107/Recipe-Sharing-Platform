@@ -1,9 +1,9 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { deleteRecipe } from "@/lib/actions";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import RecipeCard from '../components/RecipeCard';
 
 interface Recipe {
   _id: string;
@@ -21,30 +21,27 @@ export default function RecipeList({ recipes }: RecipeListProps) {
   async function handleDelete(id: string) {
     const confirmed = confirm("💀 Are you sure you want to delete this cursed recipe?");
     if (confirmed) {
-      await deleteRecipe(id);
-      toast.success("🔥 Cursed Recipe Deleted");
+      const success = await deleteRecipe(id);
+      if (success) {
+        toast.success("🔥 Cursed Recipe Deleted");
+      } else {
+        toast.error("💀 Failed to Delete");
+      }
       router.refresh(); // Re-fetch the Data
     }
   }
+  
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
       {recipes.map((recipe) => (
-        <Card key={recipe._id} className="hover:scale-105 transition">
-          <CardContent>
-            <h2 className="text-xl font-semibold">{recipe.title}</h2>
-            <p>{recipe.description}</p>
-
-            <div className="flex justify-between items-center mt-4">
-              <Button variant="destructive" onClick={() => handleDelete(recipe._id)}>
-                DELETE 🔥
-              </Button>
-              <Button variant="outline" onClick={() => toast.info("Edit Feature Coming...")}>
-                EDIT 📝
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        <RecipeCard
+          key={recipe._id}
+          title={recipe.title}
+          description={recipe.description}
+          onDelete={() => handleDelete(recipe._id)}
+          onEdit={() => toast.info("Edit Feature Coming...")}
+        />
       ))}
     </div>
   );

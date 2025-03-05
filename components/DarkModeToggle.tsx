@@ -1,16 +1,19 @@
 "use client";
 import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 
 export default function DarkModeToggle() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <button
+    <Button
+      variant="outline"
+      size="icon"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="p-2 rounded-full hover:bg-white/20 transition"
+      className="transition-all duration-300"
     >
-      {theme === "dark" ? <Sun /> : <Moon />}
-    </button>
+      {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+    </Button>
   );
 }

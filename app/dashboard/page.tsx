@@ -2,6 +2,9 @@
 import { useState, useEffect } from "react";
 import { useUser, UserButton } from "@clerk/nextjs";
 import { useToast } from "@/components/ui/toasts";
+import RecipeCard from '../../components/RecipeCard';
+import EditRecipeModal from "@/components/EditRecipeModal";
+
 
 type Recipe = {
   _id: string;
@@ -67,8 +70,35 @@ export default function Dashboard() {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    const confirmed = confirm("💀 Are you sure you want to delete this cursed recipe?");
+    if (confirmed) {
+      try {
+        const res = await fetch(`/api/recipes/${id}`, { method: "DELETE" });
+        if (res.ok) {
+          showToast("🔥 Cursed Recipe Deleted");
+          fetchRecipes();
+        } else {
+          showToast("💀 Failed to Delete");
+        }
+      } catch (error) {
+        console.error("Internal Curse Error:", error);
+        showToast("💀 Curse Technique: Internal Error");
+      }
+    }
+  };
+
+  const handleEdit = () => {
+    showToast("Edit Feature Coming...");
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center gap-6 p-10 bg-gradient-to-b from-black via-gray-900 to-black text-white">
+      <a href="/dashboard/my-recipes" className="text-purple-500 hover:underline">
+  View My Cursed Recipes 🔥🍜
+</a>
+
+      
       <div className="flex items-center justify-between w-full max-w-3xl">
         <h1 className="text-4xl font-bold">
           Welcome Chef {user?.username ?? "Anonymous Cursed Chef"} 🔥🍳
@@ -119,22 +149,16 @@ export default function Dashboard() {
       {/* Recipes List */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
         {recipes.map((recipe) => (
-          <div key={recipe._id} className="bg-white text-black p-4 rounded-lg shadow-lg">
-            {recipe.image && (
-              <img
-                src={recipe.image}
-                alt={recipe.title}
-                className="w-full h-40 object-cover rounded mb-4"
-              />
-            )}
-            <h2 className="text-2xl font-bold">{recipe.title}</h2>
-            <p className="mt-2">{recipe.description}</p>
-            <span className="text-sm text-gray-500">
-              Chef: {recipe.chef === user?.username ? "You 🔥" : recipe.chef}
-            </span>
-          </div>
+          <RecipeCard
+            key={recipe._id}
+            title={recipe.title}
+            description={recipe.description}
+            onDelete={() => handleDelete(recipe._id)}
+            onEdit={handleEdit}
+          />
         ))}
       </div>
+      <EditRecipeModal />
     </div>
   );
 }

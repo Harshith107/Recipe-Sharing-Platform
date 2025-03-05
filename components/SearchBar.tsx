@@ -1,31 +1,26 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
-interface Props {
+interface SearchBarProps {
   setRecipes: (recipes: any) => void;
 }
 
-export default function SearchBar({ setRecipes }: Props) {
-  const router = useRouter();
+export default function SearchBar({ setRecipes }: SearchBarProps) {
   const [search, setSearch] = useState("");
 
   async function handleSearch(e: any) {
     e.preventDefault();
 
     if (!search.trim()) {
-      toast.error("🔥 Chef! Search can't be empty!");
+      toast.error("🔥 Chef! Search field can't be empty!");
       return;
     }
 
     try {
-      router.push(`/dashboard?search=${search}`);
-
       const res = await fetch(`/api/recipes?search=${search}`);
       const data = await res.json();
-
       setRecipes(data);
       toast.success(`🔍 Found ${data.length} Cursed Recipes`);
     } catch (error) {
